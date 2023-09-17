@@ -1,24 +1,25 @@
 import ru.synalice.cig.CIG;
+import ru.synalice.cig.RegisterCommand;
 
-import java.util.HashMap;
-import java.util.Scanner;
+import java.lang.reflect.Method;
 
 public class Main {
     public static void main(String[] args) {
-        CIG.run(new HashMap<>() {{
-            put("SHOP", Main::shopRunnable);
-            put("GREET", Main::greetRunnable);
-        }});
+        CIG cig = new CIG(Main.class);
+        cig.run();
     }
 
-    private static void greetRunnable() {
-        Scanner scanner = new Scanner(System.in);
-        String greet = scanner.nextLine();
-        System.out.println("Hello, " + greet + "!");
+    @RegisterCommand("GREET")
+    private static void greetRunnable(String greet, int a) {
+        System.out.println("Hello, " + greet + "! Number: " + a);
     }
 
+    @RegisterCommand("SHOP")
     private static void shopRunnable() {
         Shop shop = new Shop();
         shop.listGoods();
+    }
+
+    private static void imNotAnnotated() {
     }
 }
