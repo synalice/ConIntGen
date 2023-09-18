@@ -35,13 +35,13 @@ class IOProcessor {
         return userInput.split(" ")[0];
     }
 
-    public static Optional<String[]> extractArguments(@NotNull String userInput) {
+    public static String @NotNull [] extractArguments(@NotNull String userInput) {
         String[] splitUserInput = userInput.split(" ");
 
         if (splitUserInput.length > 1) {
-            return Optional.of(Arrays.copyOfRange(splitUserInput, 1, splitUserInput.length - 1));
+            return Arrays.copyOfRange(splitUserInput, 1, splitUserInput.length - 1);
         } else {
-            return Optional.empty();
+            return new String[]{};
         }
     }
 
@@ -75,6 +75,10 @@ class IOProcessor {
 
         public static void commandNotFound(String command) {
             System.out.println("Команда " + command + " не найдена");
+        }
+
+        public static void unevenNumberOfArguments(int required, int received) {
+            System.out.println("Неверное число аргументов. Ожидается " + required + ", получено " + received);
         }
     }
 }

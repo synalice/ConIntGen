@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
-import java.util.Scanner;
 
 /**
  * The main class of this library. It has only one static method called
@@ -49,7 +48,7 @@ public final class Console {
             }
 
             String command = IOProcessor.extractCommand(userInput.get());
-            Optional<String[]> arguments = IOProcessor.extractArguments(userInput.get());
+            String[] arguments = IOProcessor.extractArguments(userInput.get());
             Optional<Method> method = MethodProcessor.matchCommandToMethod(commandsWithMethods.get(), command);
 
             if (method.isEmpty()) {
@@ -57,12 +56,20 @@ public final class Console {
                 continue;
             }
 
-            MethodData methodData = MethodProcessor.getDataAboutMethod(method.get());
+            ParamsData paramsData = MethodProcessor.getDataAboutMethod(method.get());
 
-            if (arguments.isEmpty()) {
-                MethodInvoker.invoke(method.get(), methodData);
+            if (arguments.length != paramsData.nOfParams()) {
+                IOProcessor.DefaultPhrases.unevenNumberOfArguments(paramsData.nOfParams(), arguments.length);
+                continue;
+            }
+
+            if (MethodInvoker.paramsAreOfCorrectType(paramsData.typesOfParams())) {
+            }
+
+            if (arguments.length == 0) {
+                MethodInvoker.invoke(method.get(), paramsData);
             } else {
-                MethodInvoker.invoke(method.get(), methodData, arguments.get());
+                MethodInvoker.invoke(method.get(), paramsData, arguments);
             }
         }
     }

@@ -4,7 +4,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.TypeVariable;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -38,9 +37,10 @@ class MethodProcessor {
         return Optional.ofNullable(commandsWithMethods.get(command));
     }
 
-    public static MethodData getDataAboutMethod(Method method) {
+    @Contract("_ -> new")
+    public static @NotNull ParamsData getDataAboutMethod(@NotNull Method method) {
         int nOfParams = method.getParameterCount();
         Class<?>[] typesOfParams = method.getParameterTypes();
-        return new MethodData(nOfParams, typesOfParams);
+        return new ParamsData(nOfParams, typesOfParams);
     }
 }
