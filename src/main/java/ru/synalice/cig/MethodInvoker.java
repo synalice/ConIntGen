@@ -15,8 +15,10 @@ class MethodInvoker {
     private static final List<String> ALLOWED_PARAMETER_TYPES = Arrays.asList("String", "char", "Character", "int",
             "Integer", "float", "Float", "double", "Double", "long", "Long", "boolean", "Boolean", "byte", "Byte");
 
-    public static void invoke(Class<?>[] typesOfParams, int numberOfParams, String... arguments) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public static void invoke(Class<?> classOfTheMethod, @NotNull Method method, Class<?>[] typesOfParams, int numberOfParams, String... arguments) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         Object[] argumentsAsTypes = converseArgumentsToTypes(typesOfParams, numberOfParams, arguments);
+        method.setAccessible(true);
+        method.invoke(classOfTheMethod, argumentsAsTypes);
     }
 
     private static Object @NotNull [] converseArgumentsToTypes(Class<?>[] typesOfParams, int numberOfParams, String[] arguments) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -32,7 +34,7 @@ class MethodInvoker {
         return result;
     }
 
-    public static void checkForIllegalParamTypes(Class<?>[] typesOfParams, String methodName) throws IllegalParameterTypeException {
+    public static void checkForIllegalParamTypes(Class<?> @NotNull [] typesOfParams, String methodName) throws IllegalParameterTypeException {
         for (Class<?> paramType : typesOfParams) {
             if (!ALLOWED_PARAMETER_TYPES.contains(paramType.getSimpleName())) {
                 throw new IllegalParameterTypeException(methodName, paramType.getSimpleName());

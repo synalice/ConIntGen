@@ -2,12 +2,13 @@ package ru.synalice.cig;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
 /**
  * The main class of this library. It has only one static method called
- * {@link #run(Class)} ()}, which starts the program.
+ * {@link #run(Class)}, which starts the program.
  */
 public final class Console {
     /**
@@ -47,8 +48,16 @@ public final class Console {
             String[] arguments = IOProcessor.extractArguments(userInput.get());
             Optional<Method> method = MethodProcessor.matchCommandToMethod(commandsWithMethods.get(), command);
 
-            if (method.isEmpty()) {
+            if (command.equals("END") && method.isEmpty()) {
+                IOProcessor.DefaultPhrases.shuttingDown();
+                System.exit(0);
+            } else if (method.isEmpty()) {
                 IOProcessor.DefaultPhrases.commandNotFound(command);
+                continue;
+            }
+
+            if (command.equals("HELP")) {
+                IOProcessor.DefaultPhrases.printKnownCommands();
                 continue;
             }
 
@@ -67,10 +76,14 @@ public final class Console {
                 continue;
             }
 
-            if (arguments.length == 0) {
-                MethodInvoker.invoke(methodData);
-            } else {
-                MethodInvoker.invoke(methodData, arguments);
+            try {
+                if (arguments.length == 0) {
+                    MethodInvoker.invoke(classToScan, method.get(), typesOfParams, numberOfParams);
+                } else {
+                    MethodInvoker.invoke(classToScan, method.get(), typesOfParams, numberOfParams, arguments);
+                }
+            } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
