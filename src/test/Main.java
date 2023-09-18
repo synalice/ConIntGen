@@ -1,7 +1,6 @@
 import ru.synalice.cig.CIG;
 import ru.synalice.cig.RegisterCommand;
 
-
 public class Main {
     public static void main(String[] args) {
         CIG cig = new CIG(Main.class);

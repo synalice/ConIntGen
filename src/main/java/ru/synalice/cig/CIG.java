@@ -1,5 +1,7 @@
 package ru.synalice.cig;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -15,7 +17,7 @@ public class CIG {
 
     private final Class<?> classWithAnnotations;
 
-    public CIG(Class<?> classWithAnnotations) {
+    public CIG(@NotNull Class<?> classWithAnnotations) {
         this.classWithAnnotations = classWithAnnotations;
         this.allDeclaredMethods = classWithAnnotations.getDeclaredMethods();
 
@@ -48,11 +50,12 @@ public class CIG {
             System.out.print("> ");
             String input = scanner.nextLine();
             input = cleanUserInput(input);
-            String[] splitInput = splitInputBySpace(input);
 
-            if (splitInput.length == 0) {
+            if (input.isEmpty()) {
                 continue;
             }
+
+            String[] splitInput = splitInputBySpace(input);
 
             String command = splitInput[0];
             Method methodToRun = this.commandAndMethod.get(command);
