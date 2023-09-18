@@ -10,10 +10,6 @@ import java.util.Optional;
  * {@link #run(Class)} ()}, which starts the program.
  */
 public final class Console {
-    // private static final MethodProcessor methodProcessor = new MethodProcessor();
-    // private static final IOProcessor ioProcessor = new IOProcessor();
-    private static final MethodInvoker methodInvoker = new MethodInvoker();
-
     /**
      * This method starts the console program. It scans {@code classToScan} class for
      * methods, annotated with {@link RegisterCommand}. It then maps these methods to
@@ -56,20 +52,25 @@ public final class Console {
                 continue;
             }
 
-            ParamsData paramsData = MethodProcessor.getDataAboutMethod(method.get());
+            int numberOfParams = MethodProcessor.getNumberOfParams(method.get());
+            Class<?>[] typesOfParams = MethodProcessor.getTypesOfParams(method.get());
 
-            if (arguments.length != paramsData.nOfParams()) {
-                IOProcessor.DefaultPhrases.unevenNumberOfArguments(paramsData.nOfParams(), arguments.length);
+            if (arguments.length != numberOfParams) {
+                IOProcessor.DefaultPhrases.unevenNumberOfArguments(numberOfParams, arguments.length);
                 continue;
             }
 
-            if (MethodInvoker.paramsAreOfCorrectType(paramsData.typesOfParams())) {
+            try {
+                MethodInvoker.checkForIllegalParamTypes(typesOfParams, method.get().getName());
+            } catch (IllegalParameterTypeException e) {
+                IOProcessor.DefaultPhrases.illegalParameterTypeUsed(e.getMethodName(), e.getIllegalType());
+                continue;
             }
 
             if (arguments.length == 0) {
-                MethodInvoker.invoke(method.get(), paramsData);
+                MethodInvoker.invoke(methodData);
             } else {
-                MethodInvoker.invoke(method.get(), paramsData, arguments);
+                MethodInvoker.invoke(methodData, arguments);
             }
         }
     }

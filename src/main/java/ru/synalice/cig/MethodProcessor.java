@@ -37,10 +37,13 @@ class MethodProcessor {
         return Optional.ofNullable(commandsWithMethods.get(command));
     }
 
-    @Contract("_ -> new")
-    public static @NotNull ParamsData getDataAboutMethod(@NotNull Method method) {
-        int nOfParams = method.getParameterCount();
-        Class<?>[] typesOfParams = method.getParameterTypes();
-        return new ParamsData(nOfParams, typesOfParams);
+    @Contract(pure = true)
+    public static int getNumberOfParams(@NotNull Method method) {
+        return method.getParameterCount();
+    }
+
+    @Contract(pure = true)
+    public static Class<?> @NotNull [] getTypesOfParams(@NotNull Method method) {
+        return method.getParameterTypes();
     }
 }

@@ -80,5 +80,9 @@ class IOProcessor {
         public static void unevenNumberOfArguments(int required, int received) {
             System.out.println("Неверное число аргументов. Ожидается " + required + ", получено " + received);
         }
+
+        public static void illegalParameterTypeUsed(String methodName, String illegalType) {
+            System.out.println("Метод " + methodName + " содержит параметр запрещенного типа " + illegalType);
+        }
     }
 }
