@@ -2,7 +2,10 @@ package ru.synalice.cig;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
 
 public class CIG {
     private static final Class<RegisterCommand> ANNOTATION_CLASS = RegisterCommand.class;
@@ -71,14 +74,80 @@ public class CIG {
                 continue;
             }
 
-            List<Object> rawParamsForInvocation = new ArrayList<>(Arrays.asList(splitInput).subList(1, numberOfParams+1));
             List<Object> paramsForInvocation = new ArrayList<>();
 
+            for (int i = 0; i < numberOfParams; i++) {
+                try {
+                    switch (paramTypes[i].getSimpleName()) {
+                        case ("char"): {
+                        }
+                        case ("Character"): {
+                            String tmp = String.valueOf(splitInput[i]);
 
+                            if (tmp.length() > 1) {
+                                System.err.println("ОШИБКА: Тип char/Character не может содержать больше одного символа");
+                            } else {
+                                paramsForInvocation.add(tmp);
+                            }
+
+                            break;
+                        }
+
+                        case ("String"): {
+                            paramsForInvocation.add(String.valueOf(splitInput[i+1]));
+                            break;
+                        }
+
+                        case ("boolean"): {
+                        }
+                        case ("Boolean"): {
+                            paramsForInvocation.add(Boolean.valueOf(splitInput[i+1]));
+                            break;
+                        }
+
+                        case ("int"): {
+                        }
+                        case ("Integer"): {
+                            paramsForInvocation.add(Integer.valueOf(splitInput[i+1]));
+                            break;
+                        }
+
+                        case ("double"): {
+                        }
+                        case ("Double"): {
+                            paramsForInvocation.add(Double.valueOf(splitInput[i+1]));
+                            break;
+                        }
+
+                        case ("long"): {
+                        }
+                        case ("Long"): {
+                            paramsForInvocation.add(Long.valueOf(splitInput[i+1]));
+                            break;
+                        }
+
+                        case ("byte"): {
+                        }
+                        case ("Byte"): {
+                            paramsForInvocation.add(Byte.valueOf(splitInput[i+1]));
+                            break;
+                        }
+
+                        default: {
+                            System.err.println("ОШИБКА: Невозможно преобразовать ввод к типу " +
+                                    paramTypes[i].getSimpleName());
+                            break;
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    System.err.println("ОШИБКА: Невозможно преобразовать ввод к типу " +
+                            paramTypes[i].getSimpleName());
+                }
+            }
 
             try {
                 methodToRun.setAccessible(true);
-                methodToRun.invoke(this.classWithAnnotations, rawParamsForInvocation.toArray());
+                methodToRun.invoke(this.classWithAnnotations, paramsForInvocation.toArray());
             } catch (IllegalAccessException | InvocationTargetException e) {
                 System.out.println("ОШИБКА: " + e);
             }

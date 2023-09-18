@@ -1,7 +1,6 @@
 import ru.synalice.cig.CIG;
 import ru.synalice.cig.RegisterCommand;
 
-import java.lang.reflect.Method;
 
 public class Main {
     public static void main(String[] args) {
