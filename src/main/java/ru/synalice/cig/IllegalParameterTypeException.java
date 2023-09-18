@@ -1,6 +1,6 @@
 package ru.synalice.cig;
 
-public class IllegalParameterTypeException extends Exception {
+class IllegalParameterTypeException extends Exception {
     private final String methodName;
     private final String illegalType;
 

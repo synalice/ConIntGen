@@ -17,7 +17,7 @@ class IOProcessor {
     }
 
     public static Optional<String> readUserInput() {
-        DefaultPhrases.awaitingInputSymbol();
+        StandardMessages.awaitingInputSymbol();
         return cleanUserInput(scanner.nextLine());
     }
 
@@ -39,13 +39,13 @@ class IOProcessor {
         String[] splitUserInput = userInput.split(" ");
 
         if (splitUserInput.length > 1) {
-            return Arrays.copyOfRange(splitUserInput, 1, splitUserInput.length - 1);
+            return Arrays.copyOfRange(splitUserInput, 1, splitUserInput.length);
         } else {
             return new String[]{};
         }
     }
 
-    public static class DefaultPhrases {
+    public static class StandardMessages {
 
         public static void printKnownCommands() {
             System.out.println("Список доступных команд:");
@@ -61,28 +61,32 @@ class IOProcessor {
             }
         }
 
-        public static void noCommandsFound() {
-            System.out.println("Доступные команды не найдены");
-        }
-
         public static void shuttingDown() {
             System.out.println("Завершение работы");
         }
 
         public static void awaitingInputSymbol() {
-            System.out.println("> ");
+            System.out.print("> ");
+        }
+
+    }
+
+    public static class ErrorMessages {
+        private static final String ERROR_PREFIX = "ОШИБКА: ";
+        public static void noCommandsFound() {
+            System.out.println(ERROR_PREFIX + "Доступные команды не найдены");
         }
 
         public static void commandNotFound(String command) {
-            System.out.println("Команда " + command + " не найдена");
+            System.out.println(ERROR_PREFIX + "Команда " + command + " не найдена");
         }
 
         public static void unevenNumberOfArguments(int required, int received) {
-            System.out.println("Неверное число аргументов. Ожидается " + required + ", получено " + received);
+            System.out.println(ERROR_PREFIX + "Неверное число аргументов. Ожидается " + required + ", получено " + received);
         }
 
         public static void illegalParameterTypeUsed(String methodName, String illegalType) {
-            System.out.println("Метод " + methodName + " содержит параметр запрещенного типа " + illegalType);
+            System.out.println(ERROR_PREFIX + "Метод " + methodName + " содержит параметр запрещенного типа " + illegalType);
         }
     }
 }

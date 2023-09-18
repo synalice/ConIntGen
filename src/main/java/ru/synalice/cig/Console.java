@@ -29,13 +29,13 @@ public final class Console {
         var commandsWithMethods = MethodProcessor.extractCommandsWithMethods(classToScan);
 
         if (commandsWithMethods.isEmpty()) {
-            IOProcessor.DefaultPhrases.noCommandsFound();
-            IOProcessor.DefaultPhrases.shuttingDown();
+            IOProcessor.ErrorMessages.noCommandsFound();
+            IOProcessor.StandardMessages.shuttingDown();
             return;
         }
 
         IOProcessor.extractKnownCommands(commandsWithMethods.get());
-        IOProcessor.DefaultPhrases.printKnownCommands();
+        IOProcessor.StandardMessages.printKnownCommands();
 
         while (true) {
             Optional<String> userInput = IOProcessor.readUserInput();
@@ -48,31 +48,31 @@ public final class Console {
             String[] arguments = IOProcessor.extractArguments(userInput.get());
             Optional<Method> method = MethodProcessor.matchCommandToMethod(commandsWithMethods.get(), command);
 
-            if (command.equals("END") && method.isEmpty()) {
-                IOProcessor.DefaultPhrases.shuttingDown();
-                System.exit(0);
-            } else if (method.isEmpty()) {
-                IOProcessor.DefaultPhrases.commandNotFound(command);
+            if (command.equals("HELP")) {
+                IOProcessor.StandardMessages.printKnownCommands();
                 continue;
             }
 
-            if (command.equals("HELP")) {
-                IOProcessor.DefaultPhrases.printKnownCommands();
+            if (command.equals("END") && method.isEmpty()) {
+                IOProcessor.StandardMessages.shuttingDown();
+                System.exit(0);
+            } else if (method.isEmpty()) {
+                IOProcessor.ErrorMessages.commandNotFound(command);
                 continue;
             }
 
             int numberOfParams = MethodProcessor.getNumberOfParams(method.get());
             Class<?>[] typesOfParams = MethodProcessor.getTypesOfParams(method.get());
 
-            if (arguments.length != numberOfParams) {
-                IOProcessor.DefaultPhrases.unevenNumberOfArguments(numberOfParams, arguments.length);
+            if (arguments.length != numberOfParams && numberOfParams > 0) {
+                IOProcessor.ErrorMessages.unevenNumberOfArguments(numberOfParams, arguments.length);
                 continue;
             }
 
             try {
-                MethodInvoker.checkForIllegalParamTypes(typesOfParams, method.get().getName());
+                TypeConvertor.checkForIllegalParamTypes(typesOfParams, method.get().getName());
             } catch (IllegalParameterTypeException e) {
-                IOProcessor.DefaultPhrases.illegalParameterTypeUsed(e.getMethodName(), e.getIllegalType());
+                IOProcessor.ErrorMessages.illegalParameterTypeUsed(e.getMethodName(), e.getIllegalType());
                 continue;
             }
 
@@ -83,7 +83,7 @@ public final class Console {
                     MethodInvoker.invoke(classToScan, method.get(), typesOfParams, numberOfParams, arguments);
                 }
             } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
-                System.out.println(e.getMessage());
+                e.printStackTrace();
             }
         }
     }
