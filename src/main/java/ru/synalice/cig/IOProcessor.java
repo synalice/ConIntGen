@@ -2,7 +2,6 @@ package ru.synalice.cig;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -10,10 +9,22 @@ import java.util.*;
  */
 class IOProcessor {
     private static final Scanner scanner = new Scanner(System.in);
-    static final List<String> knownCommands = new ArrayList<>();
+    private static Map<String, String> commandsWithAbout = new HashMap<>();
+    private static int LONGEST_COMMAND_LENGTH = 0;
 
-    public static void extractKnownCommands(@NotNull Map<String, Method> commandsWithMethods) {
-        knownCommands.addAll(commandsWithMethods.keySet());
+    public static void extractKnownCommands(@NotNull Map<String, String> commandsWithAbout) {
+        IOProcessor.commandsWithAbout = commandsWithAbout;
+        IOProcessor.LONGEST_COMMAND_LENGTH = findLongestCommandLength(commandsWithAbout);
+    }
+
+    private static int findLongestCommandLength(@NotNull Map<String, String> commandsWithAbout) {
+        int length = 0;
+        for (var entry : commandsWithAbout.entrySet()) {
+            if (entry.getKey().length() > LONGEST_COMMAND_LENGTH) {
+                length = entry.getKey().length();
+            }
+        }
+        return length;
     }
 
     public static Optional<String> readUserInput() {
@@ -50,14 +61,20 @@ class IOProcessor {
         public static void printKnownCommands() {
             System.out.println("Список доступных команд:");
 
-            for (String command : knownCommands) {
-                System.out.println("- " + command);
+            for (var entry : commandsWithAbout.entrySet()) {
+                System.out.printf(
+                        "- %-" + LONGEST_COMMAND_LENGTH + "s %s\n",
+                        entry.getKey(), entry.getValue());
             }
 
-            System.out.println("- HELP");
+            System.out.printf(
+                    "- %-" + LONGEST_COMMAND_LENGTH + "s %s\n",
+                    "HELP", "Вывод списка доступных команд");
 
-            if (!knownCommands.contains("END")) {
-                System.out.println("- END");
+            if (commandsWithAbout.get("END") == null) {
+                System.out.printf(
+                        "- %-" + LONGEST_COMMAND_LENGTH + "s %s\n",
+                        "END", "Завершение работы");
             }
         }
 

@@ -27,14 +27,20 @@ public final class Console {
      */
     public static void run(@NotNull Class<?> classToScan) {
         var commandsWithMethods = MethodProcessor.extractCommandsWithMethods(classToScan);
-
         if (commandsWithMethods.isEmpty()) {
             IOProcessor.ErrorMessages.noCommandsFound();
             IOProcessor.StandardMessages.shuttingDown();
             return;
         }
 
-        IOProcessor.extractKnownCommands(commandsWithMethods.get());
+        var commandsWithAbout = MethodProcessor.extractCommandsWithAbout(classToScan);
+        if (commandsWithAbout.isEmpty()) {
+            IOProcessor.ErrorMessages.noCommandsFound();
+            IOProcessor.StandardMessages.shuttingDown();
+            return;
+        }
+
+        IOProcessor.extractKnownCommands(commandsWithAbout.get());
         IOProcessor.StandardMessages.printKnownCommands();
 
         while (true) {

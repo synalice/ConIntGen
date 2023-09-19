@@ -34,25 +34,25 @@ class MethodProcessor {
         }
     }
 
-    // @Contract(pure = true)
-    // public static Optional<Map<String, String>> extractCommandsWithAbout(@NotNull Class<?> classToScan) {
-    //     Method[] methods = classToScan.getDeclaredMethods();
-    //     Map<String, String> commandsWithAbout = new HashMap<>();
-    //
-    //     for (Method method : methods) {
-    //         if (method.isAnnotationPresent(ANNOTATION_CLASS)) {
-    //             String command = method.getAnnotation(ANNOTATION_CLASS).value();
-    //             String about = method.getAnnotation(ANNOTATION_CLASS).about();
-    //             commandsWithAbout.put(command, about);
-    //         }
-    //     }
-    //
-    //     if (commandsWithAbout.isEmpty()) {
-    //         return Optional.empty();
-    //     } else {
-    //         return Optional.of(commandsWithAbout);
-    //     }
-    // }
+    @Contract(pure = true)
+    public static Optional<Map<String, String>> extractCommandsWithAbout(@NotNull Class<?> classToScan) {
+        Method[] methods = classToScan.getDeclaredMethods();
+        Map<String, String> commandsWithAbout = new HashMap<>();
+
+        for (Method method : methods) {
+            if (method.isAnnotationPresent(ANNOTATION_CLASS)) {
+                String command = method.getAnnotation(ANNOTATION_CLASS).value();
+                String about = method.getAnnotation(ANNOTATION_CLASS).about();
+                commandsWithAbout.put(command, about);
+            }
+        }
+
+        if (commandsWithAbout.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(commandsWithAbout);
+        }
+    }
 
     public static Optional<Method> matchCommandToMethod(@NotNull Map<String, Method> commandsWithMethods, String command) {
         return Optional.ofNullable(commandsWithMethods.get(command));

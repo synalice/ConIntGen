@@ -21,4 +21,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RegisterCommand {
     String value();
+    String about() default "";
 }

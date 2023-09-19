@@ -20,18 +20,17 @@ public class Main {
         Console.run(Main.class);
     }
 
-    @RegisterCommand("GREET")
+    @RegisterCommand(value = "GREET", about = "Greets the user")
     private static void greetRunnable(String greet, int number) {
         System.out.println("Hello, " + greet + "! Number: " + number);
     }
 
-    @RegisterCommand("SHOP")
+    @RegisterCommand(value = "SHOP", about = "Prints all products")
     private static void shopRunnable() {
         System.out.println("Apples");
         System.out.println("Oranges");
-        System.out.println("Tomatoes");
+        System.out.println("Potatoes");
     }
-
 }
 ```
 
