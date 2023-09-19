@@ -1,4 +1,4 @@
-# ConsoleInterfaceGenerator
+# ConIntGen
 
 This library generates a console interface, so you don't have to. All you need to do
 is annotate you methods and write `Console.run(Main.class)` where you pass in a class
