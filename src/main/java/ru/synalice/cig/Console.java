@@ -83,11 +83,7 @@ public final class Console {
             }
 
             try {
-                if (arguments.length == 0) {
-                    MethodInvoker.invoke(classToScan, method.get(), typesOfParams, numberOfParams);
-                } else {
-                    MethodInvoker.invoke(classToScan, method.get(), typesOfParams, numberOfParams, arguments);
-                }
+                MethodInvoker.invoke(classToScan, method.get(), typesOfParams, numberOfParams, arguments);
             } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InputAsTypeInterpretationException e) {
