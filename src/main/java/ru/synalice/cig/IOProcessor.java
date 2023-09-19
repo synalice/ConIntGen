@@ -12,7 +12,7 @@ class IOProcessor {
     private static final Scanner scanner = new Scanner(System.in);
     static final List<String> knownCommands = new ArrayList<>();
 
-    public static void extractKnownCommands(@NotNull HashMap<String, Method> commandsWithMethods) {
+    public static void extractKnownCommands(@NotNull Map<String, Method> commandsWithMethods) {
         knownCommands.addAll(commandsWithMethods.keySet());
     }
 

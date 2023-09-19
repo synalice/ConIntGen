@@ -17,5 +17,4 @@ public class Main {
         System.out.println("Oranges");
         System.out.println("Potatoes");
     }
-
 }

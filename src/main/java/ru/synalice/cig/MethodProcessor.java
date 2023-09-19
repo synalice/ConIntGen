@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -15,25 +16,45 @@ class MethodProcessor {
     private static final Class<RegisterCommand> ANNOTATION_CLASS = RegisterCommand.class;
 
     @Contract(pure = true)
-    public static Optional<HashMap<String, Method>> extractCommandsWithMethods(@NotNull Class<?> classToScan) {
+    public static Optional<Map<String, Method>> extractCommandsWithMethods(@NotNull Class<?> classToScan) {
         Method[] methods = classToScan.getDeclaredMethods();
-        HashMap<String, Method> annotatedMethods = new HashMap<>();
+        Map<String, Method> commandsWithMethods = new HashMap<>();
 
         for (Method method : methods) {
             if (method.isAnnotationPresent(ANNOTATION_CLASS)) {
                 String command = method.getAnnotation(ANNOTATION_CLASS).value();
-                annotatedMethods.put(command, method);
+                commandsWithMethods.put(command, method);
             }
         }
 
-        if (annotatedMethods.isEmpty()) {
+        if (commandsWithMethods.isEmpty()) {
             return Optional.empty();
         } else {
-            return Optional.of(annotatedMethods);
+            return Optional.of(commandsWithMethods);
         }
     }
 
-    public static Optional<Method> matchCommandToMethod(@NotNull HashMap<String, Method> commandsWithMethods, String command) {
+    // @Contract(pure = true)
+    // public static Optional<Map<String, String>> extractCommandsWithAbout(@NotNull Class<?> classToScan) {
+    //     Method[] methods = classToScan.getDeclaredMethods();
+    //     Map<String, String> commandsWithAbout = new HashMap<>();
+    //
+    //     for (Method method : methods) {
+    //         if (method.isAnnotationPresent(ANNOTATION_CLASS)) {
+    //             String command = method.getAnnotation(ANNOTATION_CLASS).value();
+    //             String about = method.getAnnotation(ANNOTATION_CLASS).about();
+    //             commandsWithAbout.put(command, about);
+    //         }
+    //     }
+    //
+    //     if (commandsWithAbout.isEmpty()) {
+    //         return Optional.empty();
+    //     } else {
+    //         return Optional.of(commandsWithAbout);
+    //     }
+    // }
+
+    public static Optional<Method> matchCommandToMethod(@NotNull Map<String, Method> commandsWithMethods, String command) {
         return Optional.ofNullable(commandsWithMethods.get(command));
     }
 
