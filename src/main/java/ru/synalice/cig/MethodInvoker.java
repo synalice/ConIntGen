@@ -10,11 +10,9 @@ import java.lang.reflect.Method;
  * everything regarding an invocation of this method.
  */
 class MethodInvoker {
-
-    public static void invoke(Class<?> classOfTheMethod, @NotNull Method method, Class<?>[] typesOfParams, int numberOfParams, String... arguments) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        Object[] argumentsAsTypes = TypeConvertor.converseArgumentsToTypes(typesOfParams, numberOfParams, arguments);
+    public static void invoke(Class<?> classOfTheMethod, @NotNull Method method, Class<?>[] typesOfParams, int numberOfParams, String... arguments) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, InputAsTypeInterpretationException {
+        Object[] argumentsAsTypes = TypeProcessor.converseArgumentsToTypes(typesOfParams, numberOfParams, arguments);
         method.setAccessible(true);
         method.invoke(classOfTheMethod, argumentsAsTypes);
     }
-
 }

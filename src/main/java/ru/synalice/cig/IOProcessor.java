@@ -10,7 +10,7 @@ import java.util.*;
  */
 class IOProcessor {
     private static final Scanner scanner = new Scanner(System.in);
-    static List<String> knownCommands = new ArrayList<>();
+    static final List<String> knownCommands = new ArrayList<>();
 
     public static void extractKnownCommands(@NotNull HashMap<String, Method> commandsWithMethods) {
         knownCommands.addAll(commandsWithMethods.keySet());
@@ -73,6 +73,7 @@ class IOProcessor {
 
     public static class ErrorMessages {
         private static final String ERROR_PREFIX = "ОШИБКА: ";
+
         public static void noCommandsFound() {
             System.out.println(ERROR_PREFIX + "Доступные команды не найдены");
         }
@@ -87,6 +88,10 @@ class IOProcessor {
 
         public static void illegalParameterTypeUsed(String methodName, String illegalType) {
             System.out.println(ERROR_PREFIX + "Метод " + methodName + " содержит параметр запрещенного типа " + illegalType);
+        }
+
+        public static void cantInterpretInputAsType(String input, Class<?> type) {
+            System.out.println(ERROR_PREFIX + "Невозможно привести " + input + " к типу " + type.getSimpleName());
         }
     }
 }

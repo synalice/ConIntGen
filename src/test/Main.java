@@ -7,16 +7,15 @@ public class Main {
     }
 
     @RegisterCommand("GREET")
-    private static void greetRunnable(String greet, int a) {
-        System.out.println("Hello, " + greet + "! Number: " + a);
+    private static void greetRunnable(String greet, int number) {
+        System.out.println("Hello, " + greet + "! Number: " + number);
     }
 
     @RegisterCommand("SHOP")
     private static void shopRunnable() {
-        Shop shop = new Shop();
-        shop.listGoods();
+        System.out.println("Apples");
+        System.out.println("Oranges");
+        System.out.println("Potatoes");
     }
 
-    private static void imNotAnnotated() {
-    }
 }

@@ -70,7 +70,7 @@ public final class Console {
             }
 
             try {
-                TypeConvertor.checkForIllegalParamTypes(typesOfParams, method.get().getName());
+                TypeProcessor.checkForIllegalParamTypes(typesOfParams, method.get().getName());
             } catch (IllegalParameterTypeException e) {
                 IOProcessor.ErrorMessages.illegalParameterTypeUsed(e.getMethodName(), e.getIllegalType());
                 continue;
@@ -82,8 +82,10 @@ public final class Console {
                 } else {
                     MethodInvoker.invoke(classToScan, method.get(), typesOfParams, numberOfParams, arguments);
                 }
-            } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
+            } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
                 e.printStackTrace();
+            } catch (InputAsTypeInterpretationException e) {
+                IOProcessor.ErrorMessages.cantInterpretInputAsType(e.getInput(), e.getType());
             }
         }
     }

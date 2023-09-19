@@ -9,8 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TypeConvertor {
-
+class TypeProcessor {
     private static final List<String> ALLOWED_PARAMETER_TYPES = Arrays.asList("String", "char", "Character", "int",
             "Integer", "float", "Float", "double", "Double", "long", "Long", "boolean", "Boolean", "byte", "Byte");
     private static final Map<Class<?>, Class<?>> primitiveToWrapperMapping;
@@ -26,7 +25,7 @@ public class TypeConvertor {
         primitiveToWrapperMapping.put(char.class, Character.class);
     }
 
-    static Object @NotNull [] converseArgumentsToTypes(Class<?>[] typesOfParams, int numberOfParams, String[] arguments) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    static Object @NotNull [] converseArgumentsToTypes(Class<?>[] typesOfParams, int numberOfParams, String[] arguments) throws NoSuchMethodException, IllegalAccessException, InputAsTypeInterpretationException {
         Object[] result = new Object[numberOfParams];
 
         for (int i = 0; i < numberOfParams; i++) {
@@ -43,7 +42,13 @@ public class TypeConvertor {
             }
 
             Method valueOfMethod = type.getMethod("valueOf", String.class);
-            Object valueOfResult = valueOfMethod.invoke(null, arguments[i]);
+            Object valueOfResult;
+
+            try {
+                valueOfResult = valueOfMethod.invoke(null, arguments[i]);
+            } catch (InvocationTargetException e) {
+                throw new InputAsTypeInterpretationException(arguments[i], type);
+            }
             result[i] = valueOfResult;
         }
 
