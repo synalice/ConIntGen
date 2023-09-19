@@ -35,7 +35,18 @@ public class Main {
 ```
 
 ## Installation
-xxxxxxxxx
+1. Add this to `pom.xml`: 
+    ```xml
+    <dependency>
+      <groupId>ru.synalice</groupId>
+      <artifactId>conintgen</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    ```
+2. Run via command line:
+    ```bash
+    $ mvn install
+    ```
 
 ## Your help
 Create and issue if there is anything wrong. There might be some bugs. Even some major
